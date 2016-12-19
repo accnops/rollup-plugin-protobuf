@@ -1,5 +1,6 @@
 import ProtoBuf from 'protobufjs';
 import protobufToJson from 'protobufjs/cli/targets/json';
+import protobufToStatic from 'protobufjs/cli/targets/static';
 import { createFilter } from 'rollup-pluginutils';
 
 
@@ -14,15 +15,29 @@ export default function protobuf(options = {}) {
         transform(code, id) {
             if (!ext.test(id)) return null;
             if (!filter(id)) return null;
-
-            const root = new ProtoBuf.Root();
-			root.loadSync(id);
-            const json = JSON.stringify(root);
-
-            return {
-                code: `import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJSON(${json});`,
-                map: { mappings: '' }
-            };
+			
+			return new Promise((resolve, reject) => {
+				new ProtoBuf.Root().load(id, options, (err, root) => {
+					if(err) return reject(err);
+					if(options.target == 'static') {
+						protobufToStatic(root, options, (err, code) => {
+							if(err) return reject(err);
+							resolve({
+								code: `import $protobuf from 'protobufjs/runtime';\n${code}\nexport default $root;`,
+								map: { mappings: '' }
+							});
+						});
+					} else {
+						protobufToJson(root, options, (err, code) => {
+							if(err) return reject(err);
+							resolve({
+								code: `import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJSON(${json});`,
+								map: { mappings: '' }
+							});
+						});
+					}
+				});
+			});
         }
     };
 }
