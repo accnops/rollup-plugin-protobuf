@@ -20,7 +20,7 @@ export default function protobuf(options = {}) {
             const json = JSON.stringify(root);
 
             return {
-                code: `import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJson(${json});`,
+                code: `import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJSON(${json});`,
                 map: { mappings: '' }
             };
         }
