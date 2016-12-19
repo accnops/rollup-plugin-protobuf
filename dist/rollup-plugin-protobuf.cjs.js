@@ -25,7 +25,7 @@ function protobuf(options) {
 				new ProtoBuf.Root().load(id, options, function (err, root) {
 					if(err) return reject(err);
 					if(options.target == 'static') {
-						protobufToStatic(root, Object.assign({ wrap: 'es6' }, options), function (err, code) {
+						protobufToStatic(root, Object.assign({ wrap: 'es6', encode: true, decode: true, delimited: true, verify: true }, options), function (err, code) {
 							if(err) return reject(err);
 							resolve({
 								code: code,

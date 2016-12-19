@@ -20,7 +20,7 @@ export default function protobuf(options = {}) {
 				new ProtoBuf.Root().load(id, options, (err, root) => {
 					if(err) return reject(err);
 					if(options.target == 'static') {
-						protobufToStatic(root, Object.assign({ wrap: 'es6' }, options), (err, code) => {
+						protobufToStatic(root, Object.assign({ wrap: 'es6', encode: true, decode: true, delimited: true, verify: true }, options), (err, code) => {
 							if(err) return reject(err);
 							resolve({
 								code: code,
