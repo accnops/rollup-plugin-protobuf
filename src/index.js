@@ -15,16 +15,12 @@ export default function protobuf(options = {}) {
             if (!ext.test(id)) return null;
             if (!filter(id)) return null;
 
-            const parser = new ProtoBuf.DotProto.Parser(code);
-            const data = parser.parse();
-
-            const builder = ProtoBuf.newBuilder(options);
-            builder["import"](data);
-
-            const json = protobufToJson(builder, options);
+            const root = new ProtoBuf.Root();
+			root.loadSync(id);
+            const json = JSON.stringify(root);
 
             return {
-                code: `import ProtoBuf from 'protobufjs/dist/runtime/protobuf';\nexport default ProtoBuf.loadJson(${json}).build();`,
+                code: `import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJson(${json});`,
                 map: { mappings: '' }
             };
         }

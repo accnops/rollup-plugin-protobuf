@@ -1,5 +1,5 @@
 import ProtoBuf from 'protobufjs';
-import protobufToJson from 'protobufjs/cli/targets/json';
+import 'protobufjs/cli/targets/json';
 import { createFilter } from 'rollup-pluginutils';
 
 var ext = /\.proto$/;
@@ -16,16 +16,12 @@ function protobuf(options) {
             if (!ext.test(id)) return null;
             if (!filter(id)) return null;
 
-            var parser = new ProtoBuf.DotProto.Parser(code);
-            var data = parser.parse();
-
-            var builder = ProtoBuf.newBuilder(options);
-            builder["import"](data);
-
-            var json = protobufToJson(builder, options);
+            var root = new ProtoBuf.Root();
+			root.loadSync(id);
+            var json = JSON.stringify(root);
 
             return {
-                code: ("import ProtoBuf from 'protobufjs/dist/runtime/protobuf';\nexport default ProtoBuf.loadJson(" + json + ").build();"),
+                code: ("import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJson(" + json + ");"),
                 map: { mappings: '' }
             };
         }
