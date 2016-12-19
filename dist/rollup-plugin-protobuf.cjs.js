@@ -36,7 +36,7 @@ function protobuf(options) {
 						protobufToJson(root, options, function (err, code) {
 							if(err) return reject(err);
 							resolve({
-								code: ("import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJSON(" + json + ");"),
+								code: ("import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJSON(" + code + ");"),
 								map: { mappings: '' }
 							});
 						});
