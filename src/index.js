@@ -1,5 +1,5 @@
 import ProtoBuf from 'protobufjs';
-import protobufToJson from 'protobufjs/cli/pbjs/targets/json';
+import protobufToJson from 'protobufjs/cli/targets/json';
 import { createFilter } from 'rollup-pluginutils';
 
 
@@ -24,7 +24,7 @@ export default function protobuf(options = {}) {
             const json = protobufToJson(builder, options);
 
             return {
-                code: `import ProtoBuf from 'protobufjs/dist/protobuf-light';\nexport default ProtoBuf.loadJson(${json}).build();`,
+                code: `import ProtoBuf from 'protobufjs/dist/runtime/protobuf';\nexport default ProtoBuf.loadJson(${json}).build();`,
                 map: { mappings: '' }
             };
         }
