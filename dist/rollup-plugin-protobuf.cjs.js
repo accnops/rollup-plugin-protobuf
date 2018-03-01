@@ -18,15 +18,15 @@ function protobuf(options) {
         name: 'protobuf',
 
         transform: function transform(code, id) {
-            if (!ext.test(id)) return null;
-            if (!filter(id)) return null;
+            if (!ext.test(id)) { return null; }
+            if (!filter(id)) { return null; }
 			
 			return new Promise(function (resolve, reject) {
 				new ProtoBuf.Root().load(id, options, function (err, root) {
-					if(err) return reject(err);
+					if(err) { return reject(err); }
 					if(options.target == 'static') {
 						protobufToStatic(root, Object.assign({ wrap: 'es6', encode: true, decode: true, delimited: true, verify: true }, options), function (err, code) {
-							if(err) return reject(err);
+							if(err) { return reject(err); }
 							resolve({
 								code: code,
 								map: { mappings: '' }
@@ -34,7 +34,7 @@ function protobuf(options) {
 						});
 					} else {
 						protobufToJson(root, options, function (err, code) {
-							if(err) return reject(err);
+							if(err) { return reject(err); }
 							resolve({
 								code: ("import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJSON(" + code + ");"),
 								map: { mappings: '' }
