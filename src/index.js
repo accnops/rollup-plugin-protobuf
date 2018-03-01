@@ -31,7 +31,7 @@ export default function protobuf(options = {}) {
 						protobufToJson(root, options, (err, code) => {
 							if(err) return reject(err);
 							resolve({
-								code: `import ProtoBuf from 'protobufjs';\nexport default ProtoBuf.Root.fromJSON(${code});`,
+								code: `import ProtoBuf from 'protobufjs/light';\nexport default ProtoBuf.Root.fromJSON(${code});`,
 								map: { mappings: '' }
 							});
 						});
